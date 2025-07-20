@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continual Domain Incremental Learning on LoRA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .authors {
+            font-size: 1.1rem;
+            color: #586069;
+            margin-bottom: 8px;
+        }
+
+        .affiliation {
+            font-size: 1rem;
+            color: #6a737d;
+        }
+
+        .links {
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 8px;
+            background-color: #0366d6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0256cc;
+        }
+
+        .btn-secondary {
+            background-color: #f6f8fa;
+            color: #24292e;
+            border: 1px solid #e1e4e8;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f3f4f6;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fd7e14;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+            font-size: 1rem;
+        }
+
+        .abstract {
+            background-color: #f6f8fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0366d6;
+        }
+
+        .figure {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .figure-caption {
+            font-size: 0.9rem;
+            color: #6a737d;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .code-block {
+            background-color: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .result-card {
+            background-color: #f6f8fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e4e8;
+        }
+
+        .metric {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0366d6;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #6a737d;
+            margin-top: 4px;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .citation {
+            background-color: #fff5b4;
+            border: 1px solid #d1ecf1;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, monospace;
+            font-size: 0.85rem;
+            margin: 20px 0;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #e1e4e8;
+            text-align: center;
+            color: #6a737d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .btn {
+                display: block;
+                margin: 8px 0;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1> Enhancing LLM Inference Efficiency with Key-Value Retrieval </h1>
+            <div class="authors">Jihwan Kwak, Jungyoon Hwang, Sunghwan Joo, Sangwon Jung, and Taesup Moon</div>
+            <div class="affiliation">M.IN.D Lab, Department of ECE, Seoul National University</div>
+            
+<!--             <div class="links">
+                <a href="#" class="btn">📄 Paper</a>
+                <a href="#" class="btn btn-secondary">💻 Code</a>
+                <a href="#" class="btn btn-secondary">📊 Dataset</a>
+                <a href="#" class="btn btn-secondary">🎥 Presentation</a>
+            </div> -->
+        </header>
+
+<!--         <section>
+            <h2>Abstract</h2>
+            <div class="abstract">
+                <p>Domain-Adaptive Pre-training (DAP) is useful because we can gain a lot of performance improvement by post-pretraining the foundation model. Against the naive fine-tuning, where directly fine-tune the foundation model to the target task, DAP, where fine-tuning is conducted after pre-training of foundation model on the task-related domain, shows dramatically high performance.</p>
+                
+                <p>Recently, continual DAP setting has been focused on since there are several domains to learn. The goal of continual DAP is to build a post-trained foundation model that has cumulative knowledge on seen domains so that it can be effectively fine-tuned on any tasks.</p>
+            </div>
+        </section> -->
+
+        <section>
+            <h2>Background</h2>
+            <p>Domain-Adaptive Pre-training (DAP) is useful because we can gain a lot of performance improvement by post-pretraining the foundation model. Against the naive fine-tuning, where directly fine-tune the foundation model to the target task, DAP, where fine-tuning is conducted after pre-training of foundation model on the task-related domain, shows dramatically high performance.</p>
+            
+            <p>Recently, continual DAP setting has been focused on since there are several domains to learn. The goal of continual DAP is to build a post-trained foundation model that has cumulative knowledge on seen domains so that it can be effectively fine-tuned on any tasks.</p>
+        </section>
+
+        <section>
+            <h2>Objective</h2>
+            <p>The goal of this project is to build a framework where the model can exploit the extensive knowledge accumulated across various domains. Motivation for this comes from experiments showing that simple pre-training on a joint domain dataset might decrease performance. Therefore, we need a new method to appropriately exploit domain knowledge for effective end-task fine-tuning.</p>
+        </section>
+
+<!--         <section>
+            <h2>Method</h2>
+            <h3>Proposed Framework</h3>
+            <p>Our approach leverages LoRA (Low-Rank Adaptation) to enable efficient continual learning across domains while preserving previously acquired knowledge. The key innovations include:</p>
+            <ul>
+                <li>Domain-specific LoRA modules for targeted adaptation</li>
+                <li>Knowledge consolidation mechanisms to prevent catastrophic forgetting</li>
+                <li>Efficient parameter sharing strategies across domains</li>
+            </ul>
+
+            <div class="figure">
+                <img src="https://via.placeholder.com/600x300/f6f8fa/6a737d?text=Method+Overview+Diagram" alt="Method Overview">
+                <div class="figure-caption">Figure 1: Overview of our continual domain incremental learning framework</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Experiments</h2>
+            <h3>Datasets</h3>
+            <p>We evaluate our method on multiple domain adaptation benchmarks including:</p>
+            <ul>
+                <li>Domain-specific text corpora</li>
+                <li>Multi-domain classification tasks</li>
+                <li>Cross-domain transfer learning scenarios</li>
+            </ul>
+
+            <h3>Results</h3>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="metric">85.2%</div>
+                    <div class="metric-label">Average Accuracy</div>
+                </div>
+                <div class="result-card">
+                    <div class="metric">12.3%</div>
+                    <div class="metric-label">Improvement over Baseline</div>
+                </div>
+                <div class="result-card">
+                    <div class="metric">3.1%</div>
+                    <div class="metric-label">Forgetting Rate</div>
+                </div>
+            </div>
+
+            <div class="figure">
+                <img src="https://via.placeholder.com/600x400/f6f8fa/6a737d?text=Results+Comparison+Chart" alt="Results">
+                <div class="figure-caption">Figure 2: Performance comparison across different domains and methods</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Code Example</h2>
+            <div class="code-block">
+# Example usage of our continual learning framework
+from continual_lora import ContinualLoRAModel
+
+model = ContinualLoRAModel(
+    base_model="bert-base-uncased",
+    lora_rank=16,
+    domains=["medical", "legal", "scientific"]
+)
+
+# Train on each domain incrementally
+for domain in domains:
+    model.train_domain(domain_data[domain])
+    model.consolidate_knowledge()
+
+# Fine-tune on downstream task
+model.fine_tune(target_task_data)
+            </div>
+        </section>
+
+        <section>
+            <h2>Citation</h2>
+            <div class="citation">
+@inproceedings{kim2024continual,
+  title={Continual Domain Incremental Learning on LoRA},
+  author={Kim, Dohoon and Moon, Taesup},
+  booktitle={Proceedings of [Conference Name]},
+  year={2024},
+  organization={[Publisher]}
+}
+            </div>
+        </section> -->
+
+        <footer>
+            <p>© 2025 M.IN.D Lab, Seoul National University. All rights reserved.</p>
+            <p>For questions, please contact: [kkwakzi@snu.ac.kr]</p>
+        </footer>
+    </div>
+</body>
