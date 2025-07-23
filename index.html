@@ -254,13 +254,14 @@
          <section>
             <h2>Method</h2>
             <h3>Motivation</h3>
-            <p> In order to see the room for improvement from the previous works that have shown at most 20% of KV, we have run the "upperbound" model that utilizes the ground-truth attention score. The upperbound model retrieves the top-k KV from full attention score of each attention score of each head. Implementation details include</p>
+            <p> To assess the potential for improvement beyond previous works that achieved at most 20% KV retention, we conducted experiments with an "upperbound" model that leverages ground-truth attention scores. This upperbound model retrieves the top-k key-value pairs based on the complete attention scores from each attention head. Implementation details include</p>
             <ul>
                 <li> Dataset: HotpotQA, Musique, Qasper, 2wikimqa (Knowledge QA task in LongBench Benchmark)</li>
                 <li> Model: Qwen2-7B-Instruct</li>
                 <li> X-axis: KV budget (mean comp ratio) during decoding </li>
                 <li> Y-axis : F1 score </li>
             </ul>
+             <p> The results demonstrate that the upperbound model maintains performance comparable to full KV usage while utilizing only 4 to 16 key-value pairs—less than 0.2% of the total KV cache. These findings indicate significant room for improvement in current KV retrieval methods. </p>
 
             <div class="figures-grid">
                 <div class="figure-item">
