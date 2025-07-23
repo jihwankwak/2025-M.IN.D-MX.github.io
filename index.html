@@ -254,9 +254,9 @@
          <section>
             <h2>Method</h2>
             <h3>Motivation</h3>
-            <p>Our approach leverages LoRA (Low-Rank Adaptation) to enable efficient continual learning across domains while preserving previously acquired knowledge. Implementation details include</p>
+            <p> In order to see the room for improvement from the previous works that have shown at most 20% of KV, we have run the "upperbound" model that utilizes the ground-truth attention score. The upperbound model retrieves the top-k KV from full attention score of each attention score of each head. Implementation details include</p>
             <ul>
-                <li> Dataset: HotpotQA (Knowledge QA task in LongBench Benchmark)</li>
+                <li> Dataset: HotpotQA, Musique, Qasper, 2wikimqa (Knowledge QA task in LongBench Benchmark)</li>
                 <li> Model: Qwen2-7B-Instruct</li>
                 <li> X-axis: KV budget (mean comp ratio) during decoding </li>
                 <li> Y-axis : F1 score </li>
@@ -264,20 +264,20 @@
 
             <div class="figures-grid">
                 <div class="figure-item">
-                    <img src="./figure1.png" alt="Results on HotpotQA dataset">
+                    <img src="./hotpotqa.png" alt="Results on HotpotQA dataset">
                     <div class="figure-caption">Figure 1: Results on HotpotQA</div>
                 </div>
                 <div class="figure-item">
-                    <img src="./figure2.png" alt="Results on Musique dataset">
+                    <img src="./musique.png" alt="Results on Musique dataset">
                     <div class="figure-caption">Figure 2: Results on Musique</div>
                 </div>
                 <div class="figure-item">
-                    <img src="./figure3.png" alt="Results on Qasper dataset">
+                    <img src="./qasper.png" alt="Results on Qasper dataset">
                     <div class="figure-caption">Figure 3: Results on Qasper</div>
                 </div>
                 <div class="figure-item">
-                    <img src="./figure4.png" alt="Results on 2wikimqa dataset">
-                    <div class="figure-caption">Figure 4: Results on 2wikimqa dataset</div>
+                    <img src="./2wikimqa.png" alt="Results on 2wikimqa dataset">
+                    <div class="figure-caption">Figure 4: Results on 2wikimqa</div>
                 </div>
             </div>
         </section>
